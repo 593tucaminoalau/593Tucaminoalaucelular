@@ -806,10 +806,62 @@
       document.getElementById('seconds').innerText = Math.floor((dist % (1000 * 60)) / 1000);
     }, 1000);
 
+
+/* === SCRIPT DE PERSISTENCIA TOTAL (FORZADO) === */
+(function() {
+    // 1. Mapeo de seguridad: Relaciona los nombres de tus enlaces con los IDs de tu código
+    const mapaSecciones = {
+        '#simuladores': 'simuladores',
+        '#quienes-somos': 'quienes',
+        '#trabaja-con-nosotros': 'trabaja',
+        '#test-vocacional': 'test',
+        '': 'main'
+    };
+
+    // 2. Sobrescribimos navTo para que CUALQUIER llamada actualice la URL
+    const originalNavTo = window.navTo;
+    window.navTo = function(key) {
+        // Buscamos el nombre correcto para la URL
+        const hashDestino = Object.keys(mapaSecciones).find(k => mapaSecciones[k] === key) || '';
+        
+        // Forzamos el cambio en la barra de direcciones del navegador
+        if (history.pushState) {
+            history.pushState(null, null, hashDestino || ' ');
+        } else {
+            window.location.hash = hashDestino;
+        }
+
+        // Ejecutamos tu función original para mostrar la sección
+        originalNavTo(key);
+    };
+
+    // 3. Función de Sincronización "Bruta"
+    function forzarCargaSeccion() {
+        const hashActual = window.location.hash;
+        const seccionID = mapaSecciones[hashActual] || 'main';
+        
+        // Ejecutamos la lógica de mostrado directamente
+        if (sections[seccionID]) {
+            Object.values(sections).forEach(s => s.classList.remove('active'));
+            sections[seccionID].classList.add('active');
+            window.scrollTo(0, 0);
+        }
+    }
+
+    // 4. Disparadores: se activa al cargar la página y al usar el botón "Atrás" del móvil
+    window.addEventListener('load', forzarCargaSeccion);
+    window.addEventListener('popstate', forzarCargaSeccion);
+    window.addEventListener('hashchange', forzarCargaSeccion);
+
+    // Ejecución inmediata por si acaso
+    forzarCargaSeccion();
+})();
+    
   </script>
 </body>
 
 </html>
+
 
 
 
