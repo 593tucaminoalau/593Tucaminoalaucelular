@@ -272,6 +272,27 @@
     footer { background: #1a1a1a; color: #888; text-align: center; padding: 30px 20px; font-size: 0.85rem; margin-top: 30px; border-top: 5px solid var(--accent); }
     footer .brand-f { color: var(--accent); font-weight: bold; font-size: 1.1rem; text-transform: uppercase; }
 
+
+    /* =CORRECCIÓN LISTA METODOLOGÍA= */
+.lista-numerada-blanca li {
+  display: block !important;       /* Desactiva el modo columnas (flex) */
+  padding-left: 25px;              /* Espacio a la izquierda para el número */
+  position: relative;              /* Necesario para ubicar el número */
+  text-align: left;                /* En móvil se lee mejor a la izquierda que justificado */
+  line-height: 1.5;                /* Mejor espaciado entre líneas */
+}
+
+.lista-numerada-blanca li::before {
+  position: absolute;              /* Saca el número del flujo del texto */
+  left: 0;                         /* Lo pega a la izquierda absoluta */
+  top: 0;
+  /* Mantenemos tus estilos originales del contador abajo */
+  counter-increment: step;
+  content: counter(step) ".";
+  font-weight: 900;
+  color: var(--accent);
+}
+
   </style>
 </head>
 <body>
@@ -775,4 +796,5 @@
 
   </script>
 </body>
+
 </html>
